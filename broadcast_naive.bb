@@ -1,5 +1,5 @@
 #!/usr/bin/env bb
-(ns broadcast
+(ns broadcast-naive
   (:require [protocol :as p]))
 (def topology (promise))
 
@@ -19,11 +19,12 @@
   (binding [*out* *err*] (println message))
   (when-not (@messages message)
     (doseq [neighbor (@p/my-id @topology)]
-      (p/send-to! neighbor :broadcast :message message)))
+      (p/send-to! neighbor :msg-exchange :message message)))
   (swap! messages conj message)
   (p/reply! :broadcast_ok))
 
 (p/initialize)
 (p/run-router {"topology" read-topology
                "read" read-handler
-               "broadcast" broadcast})
+               "broadcast" broadcast
+               "msg-exchange" broadcast})
