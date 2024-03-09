@@ -26,6 +26,7 @@
         (->
          msg
          (enumerate id)
+         (assoc :src @my-id)
          json/generate-string
          println)
         (recur (inc id))))
@@ -38,14 +39,14 @@
   {:dest dest
    :body body})
 
-(defn reply-to [request body]
+(defn reply [request body]
   (let [dest (:src request)
         request-id (-> request :body :msg_id)
         body' (assoc body :in_reply_to request-id)]
     (send-to dest body')))
 
 (defn error [request code text]
-  (reply-to request {:type "error"
+  (reply request {:type "error"
                      :code code
                      :text text}))
 
@@ -57,4 +58,12 @@
     (assert (= "init" type))
     (deliver my-id node_id)
     (deliver nodes node_ids)
-    (send! (reply-to initial-msg {:type "init_ok"}))))
+    (send! (reply initial-msg {:type "init_ok"}))))
+
+(defn run-router [responders]
+  (loop []
+    (when-let [[msg body type] (a/<!! reader)]
+      (if-let [responder (responders type)]
+        (responder msg body type)
+        (send! (error msg 10 (format "no function bound to type: %s" type))))
+      (recur))))
