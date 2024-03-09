@@ -61,10 +61,18 @@
     (deliver nodes (mapv keyword node_ids))
     (send! (reply initial-msg {:type "init_ok"}))))
 
+(def ^:dynamic *request* "no request in progress")
+
 (defn run-router [responders]
   (loop []
     (when-let [[msg body type] (a/<!! reader)]
-      (if-let [responder (responders type)]
-        (responder msg body type)
-        (send! (error msg 10 (format "no function bound to type: %s" type))))
+      (binding [*request* msg]
+        (if-let [responder (responders type)]
+          (responder msg body type)
+          (send! (error msg 10 (format "no function bound to type: %s" type)))))
       (recur))))
+
+(defn reply! [type & kvs]
+  (->> (apply assoc {:type (name type)} kvs)
+       (reply *request*)
+       (send!)))

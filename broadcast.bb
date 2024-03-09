@@ -6,11 +6,10 @@
 (defn parse-topology [t]
   (into {} (map (fn [[k v]] [k (mapv keyword v)]) t)))
 
-(defn read-topology [msg body _]
+(defn read-topology [_ body _]
   (deliver topology (parse-topology (:topology body)))
-  (->> {:type "topology_ok"}
-       (p/reply msg)
-       p/send!))
+  (p/reply! :topology_ok))
+(def messages (atom []))
 
 (p/initialize)
 (p/run-router {"topology" read-topology})

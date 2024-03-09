@@ -2,11 +2,8 @@
 (ns echo
   (:require [protocol :as p]))
 
-(defn echo [msg body _]
-  (->> {:echo (:echo body)
-       :type "echo_ok"}
-       (p/reply msg)
-       p/send!))
+(defn echo [_ body _]
+  (p/reply! :echo_ok :echo (:echo body)))
 
 (p/initialize)
 (p/run-router {"echo" echo})
