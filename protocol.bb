@@ -73,6 +73,7 @@
       (recur))))
 
 (defn reply! [type & kvs]
-  (->> (apply assoc {:type (name type)} kvs)
-       (reply *request*)
-       (send!)))
+  (let [payload {:type (name type)}]
+    (->> (if kvs (apply assoc payload kvs) payload)
+         (reply *request*)
+         (send!))))
