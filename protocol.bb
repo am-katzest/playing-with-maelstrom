@@ -29,6 +29,7 @@
          (assoc :src (name @my-id))
          json/generate-string
          println)
+        (flush)
         (recur (inc id))))
     chan))
 
