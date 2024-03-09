@@ -3,6 +3,9 @@
   (:require [cheshire.core :as json]
             [clojure.core.async :as a]))
 
+(defn log [string & parameters]
+  (binding [*out* *err*]
+    (println (apply format string parameters))))
 
 (def my-id (promise))
 (def nodes (promise))
@@ -69,7 +72,9 @@
       (binding [*request* msg]
         (if-let [responder (responders type)]
           (responder msg body type)
-          (send! (error msg 10 (format "no function bound to type: %s" type)))))
+          (do
+            (log "invalid msg type: %s" type)
+            (send! (error msg 10 (format "no function bound to type: %s" type))))))
       (recur))))
 
 (defn format-payload [type & kvs]
@@ -85,7 +90,3 @@
   (->> (apply format-payload type kvs)
        (send-to destination)
        (send!)))
-
-(defn log [string & parameters]
-  (binding [*out* *err*]
-    (println (apply format string parameters))))
