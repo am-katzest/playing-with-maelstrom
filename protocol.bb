@@ -72,8 +72,20 @@
           (send! (error msg 10 (format "no function bound to type: %s" type)))))
       (recur))))
 
-(defn reply! [type & kvs]
+(defn format-payload [type & kvs]
   (let [payload {:type (name type)}]
-    (->> (if kvs (apply assoc payload kvs) payload)
-         (reply *request*)
-         (send!))))
+    (if kvs (apply assoc payload kvs) payload)))
+
+(defn reply! [type & kvs]
+  (->> (apply format-payload type kvs)
+       (reply *request*)
+       (send!)))
+
+(defn send-to! [destination type & kvs]
+  (->> (apply format-payload type kvs)
+       (send-to destination)
+       (send!)))
+
+(defn log [string & parameters]
+  (binding [*out* *err*]
+    (println (apply format string parameters))))
