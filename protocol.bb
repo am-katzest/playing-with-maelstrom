@@ -26,7 +26,7 @@
         (->
          msg
          (enumerate id)
-         (assoc :src @my-id)
+         (assoc :src (name @my-id))
          json/generate-string
          println)
         (recur (inc id))))
@@ -47,8 +47,8 @@
 
 (defn error [request code text]
   (reply request {:type "error"
-                     :code code
-                     :text text}))
+                  :code code
+                  :text text}))
 
 (defn send! [msg] (a/>!! writer msg))
 
@@ -56,8 +56,8 @@
   (let [[initial-msg body type] (a/<!! reader)
         {:keys [node_id node_ids]} body]
     (assert (= "init" type))
-    (deliver my-id node_id)
-    (deliver nodes node_ids)
+    (deliver my-id (keyword node_id))
+    (deliver nodes (mapv keyword node_ids))
     (send! (reply initial-msg {:type "init_ok"}))))
 
 (defn run-router [responders]
