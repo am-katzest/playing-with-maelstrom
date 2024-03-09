@@ -3,7 +3,10 @@
   (:require [protocol :as p]))
 
 (defn echo [msg body _]
-  (p/send! (p/reply msg {:echo (:echo body)})))
+  (->> {:echo (:echo body)
+       :type "echo_ok"}
+       (p/reply msg)
+       p/send!))
 
 (p/initialize)
 (p/run-router {"echo" echo})
