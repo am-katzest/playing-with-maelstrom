@@ -66,15 +66,24 @@
 
 (def ^:dynamic *request* "no request in progress")
 
+(defn route [responders [msg body type]]
+  (binding [*request* msg]
+    (if-let [responder (responders type)]
+      (responder msg body type)
+      (do
+        (log "invalid msg type: %s" type)
+        (send! (error msg 10 (format "no function bound to type: %s" type)))))))
+
 (defn run-router [responders]
   (loop []
-    (when-let [[msg body type] (a/<!! reader)]
-      (binding [*request* msg]
-        (if-let [responder (responders type)]
-          (responder msg body type)
-          (do
-            (log "invalid msg type: %s" type)
-            (send! (error msg 10 (format "no function bound to type: %s" type))))))
+    (when-let [full-msg (a/<!! reader)]
+      (route responders full-msg)
+      (recur))))
+
+(defn run-async-router [responders]
+  (loop []
+    (when-let [full-msg (a/<!! reader)]
+      (future (route responders full-msg))
       (recur))))
 
 (defn format-payload [type & kvs]
