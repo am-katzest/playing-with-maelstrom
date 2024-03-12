@@ -15,6 +15,8 @@
       (update this :v into (:v other)))
     (newer? [this other]
       (boolean (seq (remove (:v other) (:v this)))))
-    (coerce [_ other]
-      (assert (seqable? other))
-      (->CRDT-message-set (into #{} other))))
+    (coerce [this other]
+      (cond
+        (:v other) (crdt/coerce this (:v other))
+        (seqable? other) (->CRDT-message-set (into #{} other))
+        :else (assert false "wrong shape"))))
