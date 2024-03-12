@@ -15,13 +15,14 @@
 (defn read-handler [_]
   (p/reply! :read_ok :messages @messages))
 
-(defn broadcast [{:keys [message]}]
+(defn broadcast [{:keys [message type]}]
   (binding [*out* *err*] (println message))
   (when-not (@messages message)
     (doseq [neighbor (@p/my-id @topology)]
       (p/send-to! neighbor :msg-exchange :message message)))
   (swap! messages conj message)
-  (p/reply! :broadcast_ok))
+  (when-not (= type "msg-exchange")
+    (p/reply! :broadcast_ok)))
 
 (p/initialize)
 (p/run-router {:topology read-topology
