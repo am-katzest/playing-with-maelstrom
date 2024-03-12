@@ -6,13 +6,13 @@
 (defn parse-topology [t]
   (into {} (map (fn [[k v]] [k (mapv keyword v)]) t)))
 
-(defn read-topology [_ body _]
+(defn read-topology [body]
   (deliver topology (parse-topology (:topology body)))
   (p/reply! :topology_ok))
 
 (def messages (atom #{}))
 
-(defn read-handler [_ _ _]
+(defn read-handler [_]
   (p/reply! :read_ok :messages @messages))
 
 
@@ -35,7 +35,7 @@
        (map enmappify)
        (reduce merge-rec)))
 
-(defn broadcast [_ {:keys [message]} _]
+(defn broadcast [{:keys [message]}]
   (doseq [[target further] (plan-exchange @p/my-id @p/nodes @topology)]
     (p/send-to! target :msg-exchange
                 :message message
@@ -43,7 +43,7 @@
   (swap! messages conj message)
   (p/reply! :broadcast_ok))
 
-(defn exchange [_ {:keys [targets message]} _]
+(defn exchange [{:keys [targets message]}]
   (doseq [[target further] targets]
     (p/send-to! target :msg-exchange
                 :message message

@@ -6,16 +6,16 @@
 (defn parse-topology [t]
   (into {} (map (fn [[k v]] [k (mapv keyword v)]) t)))
 
-(defn read-topology [_ body _]
+(defn read-topology [body]
   (deliver topology (parse-topology (:topology body)))
   (p/reply! :topology_ok))
 
 (def messages (atom #{}))
 
-(defn read-handler [_ _ _]
+(defn read-handler [_]
   (p/reply! :read_ok :messages @messages))
 
-(defn broadcast [_ {:keys [message]} _]
+(defn broadcast [{:keys [message]}]
   (binding [*out* *err*] (println message))
   (when-not (@messages message)
     (doseq [neighbor (@p/my-id @topology)]

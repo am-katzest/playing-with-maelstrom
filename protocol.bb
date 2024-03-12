@@ -70,7 +70,7 @@
   (binding [*request* msg]
     (if-let [responder (or (responders type)
                            (responders (keyword type)))]
-      (responder msg body type)
+      (responder body)
       (do
         (log "invalid msg type: %s" type)
         (send! (error msg 10 (format "no function bound to type: %s" type)))))))

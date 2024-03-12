@@ -2,7 +2,7 @@
 (ns echo
   (:require [protocol :as p]))
 
-(defn echo [_ body _]
+(defn echo [body]
   (p/reply! :echo_ok :echo (:echo body)))
 
 (p/initialize)
