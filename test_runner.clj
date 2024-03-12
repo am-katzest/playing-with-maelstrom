@@ -5,10 +5,12 @@
 
 (cp/add-classpath ":test")
 
-(require 'test.crdt-messages-test)
+(require 'test.crdt-messages-test
+         'test.crdt-g-counter-test)
 
 (def test-results
-  (t/run-tests 'test.crdt-messages-test))
+  (t/run-tests 'test.crdt-messages-test
+               'test.crdt-g-counter-test))
 
 (let [{:keys [fail error]} test-results]
   (when (pos? (+ fail error))
