@@ -68,7 +68,8 @@
 
 (defn route [responders [msg body type]]
   (binding [*request* msg]
-    (if-let [responder (responders type)]
+    (if-let [responder (or (responders type)
+                           (responders (keyword type)))]
       (responder msg body type)
       (do
         (log "invalid msg type: %s" type)
