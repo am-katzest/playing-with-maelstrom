@@ -27,4 +27,6 @@
 (p/run-router {:topology read-topology
                :read read-handler
                :broadcast broadcast
+               :error (constantly nil)
+               :broadcast_ok (constantly nil)
                :msg-exchange broadcast})
