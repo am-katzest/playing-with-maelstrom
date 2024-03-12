@@ -51,13 +51,6 @@
   ;; not thread safe, but it's probabilistic anyway
   )
 
-;; (defn exchange [_ {:keys [targets message]}]
-;;   (doseq [[target further] targets]
-;;     (p/send-to! target :msg-exchange
-;;                 :message message
-;;                 :targets further))
-;;   (swap! messages conj message))
-
 (p/initialize)
 (p/run-router {:topology  read-topology
                :read read-handler
