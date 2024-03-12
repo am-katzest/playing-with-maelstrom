@@ -6,4 +6,4 @@
   (p/reply! :echo_ok :echo (:echo body)))
 
 (p/initialize)
-(p/run-router {"echo" echo})
+(p/run-router {:echo echo})

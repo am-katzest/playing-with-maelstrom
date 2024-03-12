@@ -24,7 +24,7 @@
   (p/reply! :broadcast_ok))
 
 (p/initialize)
-(p/run-router {"topology" read-topology
-               "read" read-handler
-               "broadcast" broadcast
-               "msg-exchange" broadcast})
+(p/run-router {:topology read-topology
+               :read read-handler
+               :broadcast broadcast
+               :msg-exchange broadcast})

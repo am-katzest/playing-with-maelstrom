@@ -51,7 +51,7 @@
   (swap! messages conj message))
 
 (p/initialize)
-(p/run-router {"topology" read-topology
-                     "read" read-handler
-                     "broadcast" broadcast
-                     "msg-exchange" exchange})
+(p/run-router {:topology  read-topology
+               :read read-handler
+               :broadcast broadcast
+               :msg-exchange  exchange})
