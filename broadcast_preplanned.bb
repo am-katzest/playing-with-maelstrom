@@ -36,12 +36,12 @@
        (reduce merge-rec)))
 
 (defn broadcast [{:keys [message]}]
+  (swap! messages conj message)
+  (p/reply! :broadcast_ok)
   (doseq [[target further] (plan-exchange @p/my-id @p/nodes @topology)]
     (p/send-to! target :msg-exchange
                 :message message
-                :targets further))
-  (swap! messages conj message)
-  (p/reply! :broadcast_ok))
+                :targets further)))
 
 (defn exchange [{:keys [targets message]}]
   (doseq [[target further] targets]
@@ -51,7 +51,7 @@
   (swap! messages conj message))
 
 (p/initialize)
-(p/run-router {:topology  read-topology
+(p/run-async-router {:topology  read-topology
                :read read-handler
                :broadcast broadcast
                :msg-exchange  exchange})
