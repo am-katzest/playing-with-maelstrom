@@ -8,6 +8,7 @@
   '[test.crdt-messages-test
     test.crdt-g-counter-test
     test.crdt-tuple-test
+    test.crdt-pn-counter-test
     test.json-resistance-test])
 
 (apply require namespaces)
