@@ -7,10 +7,9 @@
     []
   crdt/CRDT
     (value [this]
-      (let [v (vals this)]
-        (if (seq v)
-          (apply max v)
-          0)))
+      (->> this
+           vals
+           (reduce + 0)))
     (update [this me arg]
       (update this me (fnil + 0) arg))
     (merge [this other]

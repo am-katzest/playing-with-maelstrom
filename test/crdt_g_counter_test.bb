@@ -15,7 +15,9 @@
   (is (= (>> :a 5 :b 7) (crdt/merge (>> :a 5 :b 7) (>>)))))
 
 (deftest value-test
-  (is (= 3 (crdt/value (crdt/merge (>> :a 2) (>> :b 3))))))
+  (is (= 3 (crdt/value (>> :b 3))))
+  (is (= 7 (crdt/value (>> :a 3 :b 4))))
+  (is (= 0 (crdt/value (>>)))))
 
 (deftest coercion-test
   (is (= (>> :a 3) (crdt/coerce (>>) {:a 3})))
