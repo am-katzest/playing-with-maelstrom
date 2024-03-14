@@ -2,9 +2,8 @@
 (ns test.crdt-g-counter-test
   (:require [crdt :as crdt]
             [cheshire.core :as json]
-            [crdt-g-counter :as g]
+            [crdt-g-counter :as g :refer [>>]]
             [clojure.test :refer [deftest is]]))
-(defn >> [& args] (g/map->CRDT-g-counter (if (seq args) (apply assoc {} args) {})))
 
 (deftest merging-test
   (is (= (>>) (crdt/merge (>>) (>>))))

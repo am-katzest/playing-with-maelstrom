@@ -1,17 +1,11 @@
 #!/usr/bin/env bb
 (ns test.crdt-pn-counter-test
   (:require [crdt :as crdt]
-            [crdt-pn-counter :as pn]
+            [crdt-pn-counter :as pn :refer [>>]]
             [crdt-tuple :as tuple]
             [crdt-g-counter :as g]
             [clojure.test :refer [deftest is]]))
 
-(defn >> [& args] (pn/->CRDT-pn-counter
-                (let [[names adds subs] (if (seq args) (apply mapv vector (partition 3 args)) [[] [] []])
-                      make-g-counter #(g/map->CRDT-g-counter (into {} (map vector names %)))]
-                  (tuple/->CRDT-tuple
-                   [(make-g-counter adds)
-                    (make-g-counter (map abs subs))]))))
 (deftest merging-test
   (is (= (>>) (crdt/merge (>>) (>>))))
   (is (= (>> :a 5 -8) (crdt/merge (>> :a 5 -8) (>> :a 5 -8))))

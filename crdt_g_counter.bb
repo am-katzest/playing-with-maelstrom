@@ -28,4 +28,8 @@
       (assert (every? keyword?  (keys other)))
       (assert (every? number?  (vals other)))
       (map->CRDT-g-counter other)))
-(def ZERO (map->CRDT-g-counter {}))
+
+
+(defn >> [& args] (map->CRDT-g-counter (if (seq args) (apply assoc {} args) {})))
+
+(def zero (>>))

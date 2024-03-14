@@ -22,3 +22,5 @@
                         (assert (= (count (:list this)) (count (:list other))))
                         (crdt/coerce this (:list other)))
         :else (->CRDT-tuple (map crdt/coerce (:list this) other)))))
+
+(defn >> [& args] (->CRDT-tuple (or args [])))

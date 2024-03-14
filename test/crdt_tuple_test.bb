@@ -1,20 +1,19 @@
 #!/usr/bin/env bb
 (ns test.crdt-tuple-test
-  (:require [crdt-messages :as s]
+  (:require [crdt-messages :as s :refer [>>]]
             [crdt-tuple :as t]
             [crdt :as crdt]
             [clojure.test :refer [deftest is]]))
 
-(defn >> [& args] (s/->CRDT-message-set (into #{} args)))
-(defn >>t [& args] (t/->CRDT-tuple args))
+(def >>t t/>>)
 
 (deftest merging-test
   (is (= (>>t (>> 1 3) (>> 1 2))
          (crdt/merge (>>t (>> 1 3) (>> 1 2))
                      (>>t (>> 1 3) (>> 1 2)))))
   (is (thrown? AssertionError
-         (crdt/merge (>>t (>> 1 3) (>> 1 2))
-                     (>>t (>> 1 3) (>> 1 2) (>> 1 2))))))
+               (crdt/merge (>>t (>> 1 3) (>> 1 2))
+                           (>>t (>> 1 3) (>> 1 2) (>> 1 2))))))
 
 (deftest value-test
   (is (= [#{1 3} #{1 2}] (crdt/value (>>t (>> 1 3) (>> 1 2))))))

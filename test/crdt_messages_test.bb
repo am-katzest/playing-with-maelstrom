@@ -1,10 +1,9 @@
 #!/usr/bin/env bb
 (ns test.crdt-messages-test
-  (:require [crdt-messages :as s]
+  (:require [crdt-messages :as s :refer [>>]]
             [crdt :as crdt]
             [clojure.test :refer [deftest is]]))
 
-(defn >> [& args] (s/->CRDT-message-set (into #{} args)))
 
 (deftest merging-test
   (is (= (>>) (crdt/merge (>>) (>>))))

@@ -26,5 +26,11 @@
     (coerce [this other]
       (->CRDT-pn-counter (crdt/coerce (:tuple this) (:tuple other)))))
 
-(def zero (->CRDT-pn-counter
-           (tuple/->CRDT-tuple [g/ZERO g/ZERO])))
+(defn >> [& args] (->CRDT-pn-counter
+                (let [[names adds subs] (if (seq args) (apply mapv vector (partition 3 args)) [[] [] []])
+                      make-g-counter #(g/map->CRDT-g-counter (into {} (map vector names %)))]
+                  (tuple/->CRDT-tuple
+                   [(make-g-counter adds)
+                    (make-g-counter (map abs subs))]))))
+
+(def zero (>>))

@@ -20,3 +20,7 @@
         (:v other) (crdt/coerce this (:v other))
         (seqable? other) (->CRDT-message-set (into #{} other))
         :else (assert false "wrong shape"))))
+
+(defn >> [& args] (->CRDT-message-set (into #{} args)))
+
+(def zero (>>))
