@@ -4,15 +4,16 @@
          '[babashka.classpath :as cp])
 
 (cp/add-classpath ":test")
+(def namespaces
+  '[test.crdt-messages-test
+    test.crdt-g-counter-test
+    test.crdt-tuple-test
+    test.json-resistance-test])
 
-(require 'test.crdt-messages-test
-         'test.crdt-g-counter-test
-         'test.json-resistance-test)
+(apply require namespaces)
 
 (def test-results
-  (t/run-tests 'test.crdt-messages-test
-               'test.crdt-g-counter-test
-               'test.json-resistance-test))
+  (apply t/run-tests namespaces))
 
 (let [{:keys [fail error]} test-results]
   (when (pos? (+ fail error))

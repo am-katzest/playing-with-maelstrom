@@ -21,7 +21,7 @@
 
 (deftest coercion-test
   (is (= (>>t (>> 3)) (crdt/coerce (>>t (>>)) {:list [[3]]})))
-  (is (thrown? AssertionError (crdt/coerce (>>t (>>)) {:list [3]}))))
+  (is (thrown? AssertionError (crdt/coerce (>>t) {:list [3]}))))
 
 (deftest update-test
   (is (= (>>t (>> 3))
