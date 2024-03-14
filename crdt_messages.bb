@@ -1,7 +1,6 @@
 #!/usr/bin/env bb
 (ns crdt-messages
-  (:require [crdt-gossip :as gossip]
-            [crdt :as crdt]))
+  (:require [crdt :as crdt]))
 
 (defrecord
     CRDT-message-set
