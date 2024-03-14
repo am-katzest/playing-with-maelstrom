@@ -11,7 +11,7 @@
         (if (seq v)
           (apply max v)
           0)))
-    (update [this me _ arg]
+    (update [this me arg]
       (update this me + arg))
     (merge [this other]
       (merge-with max this other))
@@ -29,3 +29,4 @@
       (assert (every? keyword?  (keys other)))
       (assert (every? number?  (vals other)))
       (map->CRDT-g-counter other)))
+(def ZERO (map->CRDT-g-counter {}))

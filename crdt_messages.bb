@@ -9,7 +9,7 @@
     crdt/CRDT
     (value [this]
       (:v this))
-    (update [this _ _ arg]
+    (update [this _ arg]
       (update this :v conj arg))
     (merge [this other]
       (update this :v into (:v other)))

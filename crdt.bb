@@ -5,7 +5,7 @@
 ;; add exclude thing
 (defprotocol CRDT
   (value [this])
-  (update [this me type body])
+  (update [this identity arg])          ;only makes sense when trivial
   (newer? [this other]) ; returns true if `this` is younger in any way
   (merge [this other])
   (coerce [this other]))
