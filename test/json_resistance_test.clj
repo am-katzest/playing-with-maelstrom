@@ -2,6 +2,7 @@
   (:require  [crdt :as crdt]
              [crdt-g-counter :as g]
              [crdt-messages :as m]
+             [crdt-tuple :as tuple]
              [cheshire.core :as json]
              [clojure.test :refer [is deftest]]))
 
@@ -18,3 +19,8 @@
 (deftest crdt-g-counter-test
   (remains-the-same (g/map->CRDT-g-counter {}))
   (remains-the-same (g/map->CRDT-g-counter {:a 3})))
+
+(deftest crdt-tuple-test
+  (remains-the-same (tuple/->CRDT-tuple []))
+  (remains-the-same (tuple/->CRDT-tuple [(g/map->CRDT-g-counter {})]))
+  (remains-the-same (tuple/->CRDT-tuple [(g/map->CRDT-g-counter {}) (g/map->CRDT-g-counter {:a 3}) (m/->CRDT-message-set #{1 5})])))
