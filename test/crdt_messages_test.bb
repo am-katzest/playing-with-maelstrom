@@ -22,6 +22,10 @@
   (is (= (>> 3) (crdt/coerce (>>) [3])))
   (is (thrown? AssertionError (crdt/coerce (>>) 3))))
 
+(deftest update-test
+  (is (= (>> :a :b) (crdt/update (>> :a) nil :b)))
+  (is (= (>> :a) (crdt/update (>>) nil :a))))
+
 (deftest ordering-test
   (is (not (crdt/newer? (>> :a :b :c) (>> :a :b :c))))
   (is (not (crdt/newer? (>> :a :b) (>> :a :b :c))))

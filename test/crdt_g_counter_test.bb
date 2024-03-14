@@ -24,6 +24,13 @@
   (is (thrown? AssertionError (crdt/coerce (>>) {"a" 3})))
   (is (thrown? AssertionError (crdt/coerce (>>) {:a :3}))))
 
+(deftest update-test
+  (is (= (>> :a 3) (crdt/update (>> :a 3) :a 0)))
+  (is (= (>> :a 8) (crdt/update (>> :a 3) :a 5)))
+  (is (= (>> :a 8) (crdt/update (>>) :a 8)))
+  (is (= (>> :a 3 :b 8) (crdt/update (>> :a 3) :b 8)))
+  (is (= (>> :a 3 :b 8) (crdt/update (>> :a 3 :b 5) :b 3))))
+
 (deftest ordering-test
   (is (not (crdt/newer? (>> :a 3 :b 4) (>> :a 3 :b 4))))
   (is (not (crdt/newer? (>>) (>>))))

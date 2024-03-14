@@ -12,7 +12,7 @@
           (apply max v)
           0)))
     (update [this me arg]
-      (update this me + arg))
+      (update this me (fnil + 0) arg))
     (merge [this other]
       (merge-with max this other))
     (newer? [this other]
